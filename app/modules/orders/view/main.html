@@ -8,8 +8,8 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nº de orden</th>
                         <th>Cliente</th>
+                        <th>Nº de orden</th>
                         <th>Producto</th>
                         <th>Total $</th>
                         <th>Estado de la orden</th>
@@ -18,11 +18,11 @@
 
                 <tbody>
                     <tr ng-repeat="o in e.data">
-                        <td>{{o.OrdCusName}}</td>
-                        <td>{{o.OrdId}}</td>
+                        <td>{{o.Order.User.UseName}}</td>
+                        <td>{{o.Order.OrdId}}</td>
                         <td>{{o.Product.ProName}}</td>
                         <td>{{o.Product.ProPrice}}</td>
-                        <td>{{ o.OrdStatus == 'CREATED' ? 'Pendiente' : o.OrdStatus == 'REJECTED' ? 'Rechazada' : o.OrdStatus == 'Vencida' ? 'Vencida' : 'Aceptada' }}</td>
+                        <td>{{ o.Order.OrdStatus == 'CREATED' ? 'Pendiente' : o.Order.OrdStatus == 'REJECTED' ? 'Rechazada' : o.Order.OrdStatus == 'Vencida' ? 'Vencida' : 'Aceptada' }}</td>
                     </tr>
                 </tbody>
             </table>

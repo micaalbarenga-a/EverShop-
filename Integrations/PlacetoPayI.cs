@@ -10,16 +10,32 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-//using PlacetoPay.Integrations.Library.CSharp.PlacetoPay;
+
 namespace Integrations
 {
     public class PlacetoPayI
     {
         const string URL_BASE = "https://test.placetopay.com/redirection/";
+
         const string LOGIN = "6dd490faf9cb87a9862245da41170ff2";
         const string TRANKEY = "024h1IlD";
+        
         const string REDIRECT = "https://localhost:44325/app/#!/payed/";
-        public string GetUrl(DateTime created, double totalAmount, string reference, string description, string cusMail, string cusMobile, string cusName)
+
+
+        /// <summary>
+        /// Obtiene URL de redirección a la pasarela de pagos.
+        /// </summary>
+        /// <param name="created"></param>
+        /// <param name="totalAmount"></param>
+        /// <param name="reference"></param>
+        /// <param name="description"></param>
+        /// <param name="cusMail"></param>
+        /// <param name="cusMobile"></param>
+        /// <param name="cusName"></param>
+        /// <param name="userAgent"></param>
+        /// <returns></returns>
+        public string GetUrl(DateTime created, double totalAmount, string reference, string description, string cusMail, string cusMobile, string cusName, string userAgent)
         {
             try
             {
@@ -37,11 +53,11 @@ namespace Integrations
                 RedirectRequest request = new RedirectRequest(payment,
                     REDIRECT + reference,
                     getIP(),
-                    getBrowser(),
+                    userAgent,
                     created.AddDays(1).ToString("yyyy-MM-dd hh:mm:ss"), buyer: person);
 
                 RedirectResponse response = gateway.Request(request);
-
+                
                 Environment.SetEnvironmentVariable(reference, response.RequestId);
                 Environment.SetEnvironmentVariable("processURL", response.ProcessUrl);
 
@@ -54,6 +70,11 @@ namespace Integrations
 
         }
 
+        /// <summary>
+        /// Obtiene estado de la solicitud de pago a la pasarela 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Dictionary<string, string> GetStatus(int id)
         {
             try
@@ -70,6 +91,8 @@ namespace Integrations
 
                 var r = JsonConvert.SerializeObject(auth);
 
+
+                //Llamado a PlacetoPay para obtener el estado del pago
                 var http = (HttpWebRequest)WebRequest.Create(new Uri(URL_BASE + "api/session/" + requestID));
                 http.Accept = "application/json";
                 http.ContentType = "application/json";
@@ -102,9 +125,7 @@ namespace Integrations
             {
                 throw e;
             }
-
         }
-
 
 
 
@@ -118,44 +139,30 @@ namespace Integrations
             return new WebClient().DownloadString("http://api.ipify.org/").Replace("\\r\\n", "").Replace("\\n", "").Trim();
         }
 
-        /// <summary>
-        /// Obtención del nombre del navegador
-        /// </summary>
-        /// <returns></returns>
-        private string getBrowser()
+
+        /*Métodos para generar usuario de autenticación*/
+
+        static public string Base64(byte[] input)
         {
-            try
-            {
-                return HttpContext.Current.Request.Browser.Browser;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return Convert.ToBase64String(input);
         }
 
-
-        static public String Base64(byte[] input)
-        {
-            return System.Convert.ToBase64String(input);
-        }
-
-        static public String Base64(String input)
+        static public string Base64(string input)
         {
             if (input != null)
             {
-                return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input));
+                return Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
             }
-            return "";
+            return string.Empty;
         }
 
-        static public byte[] ToSha1(String text)
+        static public byte[] ToSha1(string text)
         {
             System.Security.Cryptography.SHA1 hashString = new System.Security.Cryptography.SHA1CryptoServiceProvider();
             return hashString.ComputeHash(ToStream(text));
         }
 
-        static public Stream ToStream(String text)
+        static public Stream ToStream(string text)
         {
             MemoryStream stream = new MemoryStream();
             StreamWriter sw = new StreamWriter(stream);

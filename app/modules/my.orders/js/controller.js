@@ -4,12 +4,12 @@ app
         let urlBase = CONFIG.ct_URL;
         return {
             get: (name, mail, mobile) => $http.get(urlBase + '/order/MyOrders'),
-            pay: id => $http.get(urlBase + '/pay/GetUrl?id=' + id)
+            pay: (id, user) => $http.get(urlBase + '/pay/GetUrl?id=' + id + '&userAgent=' + user)
         }
     })
 
 
-    .controller("MyOrdersCtrl", function ($scope, dataMyOrders,toaster, $rootScope) {
+    .controller("MyOrdersCtrl", function ($scope, dataMyOrders, toaster, $rootScope, $state) {
         var e = $scope.e = {};
 
         e.init = () => {
@@ -21,8 +21,8 @@ app
         }
 
         e.pay = (id) => {
-           
-            dataMyOrders.pay(id).then(
+
+            dataMyOrders.pay(id, $rootScope.userAgent).then(
                 ({ data }) => {
                     window.location.href = data;
                 },

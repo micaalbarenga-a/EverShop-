@@ -1,0 +1,40 @@
+﻿
+
+<form ng-submit="c.create(c.cus)">
+    <div class="row" style="margin-top: 60px;">
+
+        <div class="col-4 offset-4" style="background: #eaeaea;padding: 60px;border-radius: 14px;">
+            <div class="col-12">
+                <h3>Registrarse</h3>
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="c.cus.name" id="name" placeholder="Ingrese..." required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mail</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="c.cus.mail" id="mail" placeholder="Ingrese..." required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="c.cus.mobile" id="mobile" placeholder="Ingrese..." required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" ng-model="c.cus.pass" id="contrasena" placeholder="Ingrese..." autocomplete="off" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 offset-2">
+                <button type="submit" class="btn btn-primary pull-right" style="width: 100%;" ng-disabled="c.isLoading">Registrarme <i class="fa fa-cog fa-spin" ng-if="c.isLoading"></i></button>
+            </div>
+        </div>
+    </div>
+
+</form>

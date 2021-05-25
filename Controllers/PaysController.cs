@@ -16,20 +16,22 @@ namespace EverShop.Controllers
 
         [HttpGet]
         [Route("api/pay/GetUrl")]
-        public string GetUrl(int id)
+        public string GetUrl(int id, string userAgent)
         {
             try
             {
+                //Obtengo url para ir a pasarela de pagos
                 ShopEntities entities = new ShopEntities();
                 Order order = entities.Orders.Where(o => o.OrdId == id).FirstOrDefault();
 
-                if (order.OrdCreatedAt.AddDays(1) < DateTime.Now) throw new Exception("La orden ya está vencida");
+                if (order.OrdCreatedAt.AddDays(1) < DateTime.Now) throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "La orden ya está vencida"));
 
                 if (order.Product.ProPrice < 1000) throw new Exception("El monto mínimo para proceder a pagar es de $1000");
 
-                User user = (User)HttpContext.Current.Session["User"];
-                
-                return new Integrations.PlacetoPayI().GetUrl(order.OrdCreatedAt, (double)order.Product.ProPrice, order.OrdId.ToString(), "Compra de " + order.Product.ProName, user.UseMail, user.UseMobile, user.UseName);
+                User user = Utils.Utils.userBySession();
+
+                //Devolvemos la URL generada
+                return new Integrations.PlacetoPayI().GetUrl(order.OrdCreatedAt, (double)order.Product.ProPrice, order.OrdId.ToString(), "Compra de " + order.Product.ProName, user.UseMail, user.UseMobile, user.UseName, userAgent);
             }
             catch (Exception ex)
             {
@@ -43,6 +45,7 @@ namespace EverShop.Controllers
         {
             try
             {
+                //Actualización de estado de la orden de compra
                 ShopEntities entities = new ShopEntities();
                 var status = new PlacetoPayI().GetStatus(id);
                 string toUpdate = string.Empty;
@@ -68,6 +71,7 @@ namespace EverShop.Controllers
                 }
                 if (update)
                 {
+                    //Si debemos actualizaar el estado de la solicitud: 
                     Order order = entities.Orders.Where(o => o.OrdId == id).First();
                     order.OrdStatus = toUpdate;
                     order.OrdUpdatedAt = DateTime.Now;

@@ -10,6 +10,12 @@ app.config(function ($urlRouterProvider, $stateProvider) {
             controller: 'MainCtrl',
             templateUrl: "/app/views/login.html"
         })
+        .state('create', {
+            url: "/create",
+            controller: 'CreateCtrl',
+            templateUrl: "/app/views/create-account.html"
+        })
+
         .state('index', {
             url: "/index",
             controller: 'IxCtrl',

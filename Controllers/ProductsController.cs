@@ -15,6 +15,8 @@ namespace EverShop.Controllers
         {
             try
             {
+                //Listado de productos disponibles para comprar
+
                 Models.ShopEntities entities = new Models.ShopEntities();
                 return entities.Products.OrderBy(o => o.ProName).ToList();
             }

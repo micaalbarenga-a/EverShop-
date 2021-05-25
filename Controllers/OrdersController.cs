@@ -24,14 +24,29 @@ namespace EverShop.Controllers
         {
             try
             {
+                //Para los casos de usuarios admin, mostramos todos las órdenes
                 Models.ShopEntities entities = new Models.ShopEntities();
-                var orders = entities.Orders.ToList();
-                List<object> ret = new List<object>();
-                foreach (var orden in orders)
+
+                User user = null;
+                try
                 {
-                    if (orden.OrdCreatedAt.AddDays(1) < DateTime.Now)
-                        orden.OrdStatus = "Vencida";
-                    ret.Add(new { Order = orden, Product = entities.Products.Where(p => p.ProId == orden.OrdProduct).FirstOrDefault() });
+                    user = Utils.Utils.userBySession();
+                }
+                catch (Exception)
+                {
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Sesión expirada"));
+                }
+
+                List<object> ret = new List<object>();
+                if (user.UseAdmin)
+                {
+                    var orders = entities.Orders.ToList();
+                    foreach (var orden in orders)
+                    {
+                        if (orden.OrdCreatedAt.AddDays(1) < DateTime.Now)
+                            orden.OrdStatus = "Vencida";
+                        ret.Add(new { Order = orden, Product = entities.Products.Where(p => p.ProId == orden.OrdProduct).FirstOrDefault() });
+                    }
                 }
                 return ret;
             }
@@ -49,22 +64,22 @@ namespace EverShop.Controllers
         {
             try
             {
+                //Obtengo todas las órdenes pendientes del usuario que está logueado
                 Models.ShopEntities entities = new Models.ShopEntities();
-                int id = 0;
+                User user = null;
                 try
                 {
-                    id = Convert.ToInt32(HttpContext.Current.Session["id"]);
+                    user = Utils.Utils.userBySession();
                 }
-                catch
+                catch (Exception e)
                 {
                     throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Sesión expirada"));
                 }
-
-                return entities.Orders.Where(o => id == o.OrdUser).ToList(); ;
+                return entities.Orders.Where(o => user.UseId == o.OrdUser).ToList(); ;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Sesión expirada"));
+                throw e;
             }
 
         }
@@ -77,12 +92,15 @@ namespace EverShop.Controllers
             if (ModelState.IsValid)
             {
                 ShopEntities entities = new ShopEntities();
-                int usId = Convert.ToInt32(HttpContext.Current.Session["id"]);
-                User user = entities.Users.Where(u => u.UseId == usId).FirstOrDefault();
 
+                User user = Utils.Utils.userBySession();
+
+                //Obtengo id de producto del objeto recibido por POST
                 int idProd = Convert.ToInt32(product["Product"]["ProId"]);
 
-                Order order = new Order { OrdProduct = idProd, OrdUser = usId, OrdCreatedAt = DateTime.Now, OrdStatus = "CREATED" };
+                Order order = new Order { OrdProduct = idProd, OrdUser = user.UseId, OrdCreatedAt = DateTime.Now, OrdStatus = "CREATED" };
+
+                //Alta de la orden
                 db.Orders.Add(order);
                 await db.SaveChangesAsync();
 

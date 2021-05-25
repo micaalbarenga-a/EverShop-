@@ -8,7 +8,7 @@ app
     })
 
 
-    .controller("OrdersCtrl", function ($scope, dataOrders, toaster) {
+    .controller("OrdersCtrl", function ($scope, dataOrders, toaster, $rootScope, $state) {
         var e = $scope.e = {};
 
         function init() {
@@ -20,7 +20,8 @@ app
         }
 
         init();
-
+        if (!$rootScope.log)
+            $state.go("login");
     })
 
 
