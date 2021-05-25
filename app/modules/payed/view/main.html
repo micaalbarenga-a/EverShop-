@@ -1,0 +1,40 @@
+﻿
+<div class="col-10 m-med">
+
+    <h4>Estado del pago</h4>
+
+    <div class="row">
+        <div class="col-8 offset-3" ng-if="e.status.status=='APPROVED'">
+
+            <div style="text-align: center;">
+                <i class="far fa-check-circle text-success" style="font-size: 45px"></i>
+            </div>
+
+            <p>Pago realizado con éxito </p>
+            <p>¡Muchas gracias por tu compra!</p>
+        </div>
+
+        <div class="col-8 offset-3" ng-if="e.status.status!='APPROVED'">
+
+            <div style="text-align: center;" ng-if="e.status.status=='REJECTED'">
+                <i class="fa fa-times-circle text-danger" style="font-size: 45px;"></i>
+                <p>Tu pago ha sido rechazado.</p>
+                <a href="" ng-click="e.try()">Presione aquí para volver a intentarlo con otro método de pago</a>
+            </div>
+
+            <div style="text-align: center;" ng-if="e.status.status=='PENDING'">
+                <i class="fa fa-info-circle text-warning" style="font-size: 45px;"></i>
+                <p>Tu pago se encuentra pendiente.</p>
+                <a href="" class="text-link" ng-click="e.try()">Presione aquí para continuar con el pago</a>
+            </div>
+
+            <div style="text-align: center;" ng-if="e.status.status!='REJECTED' && e.status.status!='PENDING'">
+                
+                <p>Tuvimos un problema con tu pago que no lo tenemos identificado.</p>
+                
+            </div>
+
+
+        </div>
+    </div>
+</div>

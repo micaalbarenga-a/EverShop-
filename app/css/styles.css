@@ -1,0 +1,66 @@
+body {
+    background-color: #f1f1f1;
+}
+
+.bg-primary {
+    background-color: #ff6c0c !important;
+}
+
+table th,
+table td {
+    padding: 5px !important;
+}
+
+table th {
+    border-top: 0;
+}
+
+
+.m-med {
+    margin: 20px;
+}
+
+.m-xs {
+    margin: 5px;
+}
+
+a.nav-link {
+    color: white;
+}
+
+    a.nav-link:hover {
+        color: #242424;
+    }
+
+
+.modal {
+    display: block;
+    height: 0;
+    overflow: visible;
+}
+
+[disabled] {
+    color: gray;
+    cursor: not-allowed;
+}
+
+.pull-right {
+    float: right;
+}
+
+.btn {
+    height:30px!important;
+    line-height:0;
+}
+
+.m-t-md {
+    margin-top: 20px;
+}
+
+.text-link {
+    cursor: pointer;
+}
+
+    .text-link:hover {
+        color: #007bff;
+    }

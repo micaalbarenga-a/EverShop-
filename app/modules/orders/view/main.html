@@ -1,0 +1,32 @@
+﻿
+<div class="col-10 m-med">
+
+    <h4>Listado de órdenes</h4>
+
+    <div class="row" style="margin-top:15px" ng-if="e.data">
+        <div class="col-8 offset-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nº de orden</th>
+                        <th>Cliente</th>
+                        <th>Producto</th>
+                        <th>Total $</th>
+                        <th>Estado de la orden</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="o in e.data">
+                        <td>{{o.OrdCusName}}</td>
+                        <td>{{o.OrdId}}</td>
+                        <td>{{o.Product.ProName}}</td>
+                        <td>{{o.Product.ProPrice}}</td>
+                        <td>{{ o.OrdStatus == 'CREATED' ? 'Pendiente' : o.OrdStatus == 'REJECTED' ? 'Rechazada' : o.OrdStatus == 'Vencida' ? 'Vencida' : 'Aceptada' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

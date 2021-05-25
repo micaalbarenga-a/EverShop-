@@ -1,0 +1,30 @@
+﻿
+<div class="col-10 m-med">
+
+    <h4>Resumen de la orden</h4>
+   
+    <div class="row">
+        <div class="col-8 offset-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Número de orden</th>
+                        <th>Producto</th>
+                        <th>Total $</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>{{e.order.OrdId}}</td>
+                        <td>{{e.order.Product.ProCode}}</td>
+                        <td>{{e.order.Product.ProPrice}}</td>
+                        <td><button class="btn btn-primary" type="button" ng-click="e.pay()">Pagar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

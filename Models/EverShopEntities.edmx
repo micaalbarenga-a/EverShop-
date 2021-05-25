@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EverShopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrdId" />
+          </Key>
+          <Property Name="OrdId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrdUser" Type="int" Nullable="false" />
+          <Property Name="OrdProduct" Type="int" Nullable="false" />
+          <Property Name="OrdStatus" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="OrdCreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="OrdUpdatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="ProId" />
+          </Key>
+          <Property Name="ProId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="ProCode" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ProPrice" Type="float" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UseId" />
+          </Key>
+          <Property Name="UseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UseName" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="UseMail" Type="nvarchar" MaxLength="120" Nullable="false" />
+          <Property Name="UseMobile" Type="nvarchar" MaxLength="40" Nullable="false" />
+          <Property Name="UsePassword" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="UseAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Orders__OrdProdu__173876EA">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="OrdProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__OrdUser__182C9B23">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UseId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="OrdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EverShopModelStoreContainer">
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Orders__OrdProdu__173876EA" Association="Self.FK__Orders__OrdProdu__173876EA">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__OrdUser__182C9B23" Association="Self.FK__Orders__OrdUser__182C9B23">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EverShopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrdId" />
+          </Key>
+          <Property Name="OrdId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrdUser" Type="Int32" Nullable="false" />
+          <Property Name="OrdProduct" Type="Int32" Nullable="false" />
+          <Property Name="OrdStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OrdCreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OrdUpdatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Product" Relationship="EverShopModel.FK__Orders__OrdProdu__173876EA" FromRole="Order" ToRole="Product" />
+          <NavigationProperty Name="User" Relationship="EverShopModel.FK__Orders__OrdUser__182C9B23" FromRole="Order" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProId" />
+          </Key>
+          <Property Name="ProId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProPrice" Type="Double" />
+          <NavigationProperty Name="Orders" Relationship="EverShopModel.FK__Orders__OrdProdu__173876EA" FromRole="Product" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UseId" />
+          </Key>
+          <Property Name="UseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UseName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UseMail" Type="String" MaxLength="120" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UseMobile" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UsePassword" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UseAdmin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="EverShopModel.FK__Orders__OrdUser__182C9B23" FromRole="User" ToRole="Order" />
+        </EntityType>
+        <EntityContainer Name="ShopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK__Orders__OrdProdu__173876EA" Association="EverShopModel.FK__Orders__OrdProdu__173876EA">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__OrdUser__182C9B23" Association="EverShopModel.FK__Orders__OrdUser__182C9B23">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK__Orders__OrdProdu__173876EA">
+          <End Type="EverShopModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="EverShopModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="OrdProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__OrdUser__182C9B23">
+          <End Type="EverShopModel.User" Role="User" Multiplicity="1" />
+          <End Type="EverShopModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UseId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="OrdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EverShopModelStoreContainer" CdmEntityContainer="ShopEntities">
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="EverShopModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrdId" ColumnName="OrdId" />
+                <ScalarProperty Name="OrdUser" ColumnName="OrdUser" />
+                <ScalarProperty Name="OrdProduct" ColumnName="OrdProduct" />
+                <ScalarProperty Name="OrdStatus" ColumnName="OrdStatus" />
+                <ScalarProperty Name="OrdCreatedAt" ColumnName="OrdCreatedAt" />
+                <ScalarProperty Name="OrdUpdatedAt" ColumnName="OrdUpdatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="EverShopModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="ProId" ColumnName="ProId" />
+                <ScalarProperty Name="ProName" ColumnName="ProName" />
+                <ScalarProperty Name="ProCode" ColumnName="ProCode" />
+                <ScalarProperty Name="ProPrice" ColumnName="ProPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="EverShopModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UseId" ColumnName="UseId" />
+                <ScalarProperty Name="UseName" ColumnName="UseName" />
+                <ScalarProperty Name="UseMail" ColumnName="UseMail" />
+                <ScalarProperty Name="UseMobile" ColumnName="UseMobile" />
+                <ScalarProperty Name="UsePassword" ColumnName="UsePassword" />
+                <ScalarProperty Name="UseAdmin" ColumnName="UseAdmin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
